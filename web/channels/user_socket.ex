@@ -2,7 +2,7 @@ defmodule Poketron.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", Poketron.RoomChannel
+  channel "game:*", Poketron.GameChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket

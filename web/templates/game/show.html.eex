@@ -1,0 +1,4 @@
+<h2>Game: <%= @game.id %></h2>
+
+<div id="messages"></div>
+<input id="chat-input" type="text"></input>

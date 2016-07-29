@@ -9,7 +9,12 @@ defmodule Poketron.GameController do
   require IEx
 
   def index(conn, _params) do
-    render conn, "index.html"
+    user = conn.assigns.user
+    games = Game
+    |> Game.for_user(user)
+    |> Repo.all
+
+    render conn, "index.html", games: games
   end
 
   def new(conn, _params) do
@@ -47,7 +52,9 @@ defmodule Poketron.GameController do
   end
 
   def show(conn, params) do
-    
+    game = Repo.get(Game, params["id"])
+
+    render conn, "show.html", game: game
   end
 
   def destroy(conn, params) do

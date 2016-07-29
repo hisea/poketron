@@ -2,7 +2,7 @@ defmodule Poketron.Game do
   use Poketron.Web, :model
 
   schema "games" do
-    field :user_id, :integer
+    belongs_to :user, Poketron.User
     field :container_id, :string
 
     timestamps()
@@ -15,5 +15,10 @@ defmodule Poketron.Game do
     struct
     |> cast(params, [:user_id, :container_id])
     |> validate_required([:user_id, :container_id])
+  end
+
+  def for_user(query, user) do
+    from q in query,
+      where: q.user_id == ^user.id
   end
 end

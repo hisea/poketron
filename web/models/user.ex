@@ -7,6 +7,7 @@ defmodule Poketron.User do
     field :last_name, :string
     field :email, :string
     field :image, :string
+    has_many :games, Poketron.Game
 
     timestamps()
   end
