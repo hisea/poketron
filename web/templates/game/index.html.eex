@@ -1,7 +1,24 @@
-<h2>My Games</h2>
+<div class="container">
+  <h2>My Games</h2>
 
-<%= for game <- @games do %>
-Game ID: <%= link game.container_id, to: game_path(@conn, :show, game.id) %>
-<% end %>
-<br>
-<%= link "New Game", to: game_path(@conn, :new) %>
+  <table class="table">
+    <thead>
+      <th>Game ID</th>
+      <th>Status</th>
+      <th></th>
+    </thead>
+    <tbody>
+      <%= for game <- @games do %>
+        <tr>
+          <td>
+            <%= link short_cid(game.container_id), to: game_path(@conn, :show, game.container_id) %>
+          </td>
+          <td><%= docker_status(game.container_id) %></td>
+          <td><%= link "Stop", to: game_path(@conn, :stop, game.id)%></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <br>
+  <%= link "New Game", to: game_path(@conn, :new), class: "btn btn-raised btn-sm btn-primary" %>
+</div>

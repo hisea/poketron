@@ -19,7 +19,7 @@ defmodule Poketron.Mixfile do
   def application do
     [mod: {Poketron, []},
      applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex, :ueberauth, :ueberauth_google, :porcelain]]
+                    :phoenix_ecto, :postgrex, :ueberauth, :ueberauth_google, :dockerex ]]
   end
 
   # Specifies which paths to compile per environment.
@@ -39,7 +39,9 @@ defmodule Poketron.Mixfile do
      {:ueberauth, "~> 0.2"},
      {:ueberauth_google, "~> 0.2"},
      {:phoenix_html, "~> 2.6"},
-     {:porcelain, "~> 2.0"},
+     {:dockerex, github: "hisea/dockerex"},
+     {:ex_admin, github: "smpallen99/ex_admin"},
+     {:distillery, "~> 0.9"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:gettext, "~> 0.11"},
      {:cowboy, "~> 1.0"}]

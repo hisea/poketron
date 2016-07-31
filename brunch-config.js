@@ -2,7 +2,7 @@ exports.config = {
   // See http://brunch.io/#documentation for docs.
   files: {
     javascripts: {
-      joinTo: "js/app.js"
+      joinTo: "js/app.js",
 
       // To use a separate vendor.js bundle, specify two files path
       // http://brunch.io/docs/config#-files-
@@ -22,6 +22,11 @@ exports.config = {
     stylesheets: {
       joinTo: "css/app.css",
       order: {
+        before :[
+          "web/static/css/bootstrap.css",
+          "web/static/css/bootstrap-material-design.css",
+          "web/static/css/ripple.css"
+        ],
         after: ["web/static/css/app.css"] // concat app.css last
       }
     },

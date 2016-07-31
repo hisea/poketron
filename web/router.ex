@@ -22,6 +22,7 @@ defmodule Poketron.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
+    get "/games/:id/stop", GameController, :stop
     resources "/games", GameController, except: [:edit, :update]
   end
 

@@ -5,7 +5,8 @@
 // and connect at the socket path in "lib/my_app/endpoint.ex":
 import {Socket} from "phoenix"
 
-let socket = new Socket("/socket", {params: {token: window.userToken}})
+let socket = new Socket("/socket")
+                        //, {params: {token: window.userToken}})
 
 // When you connect, you'll often need to authenticate the client.
 // For example, imagine you have an authentication plug, `MyAuth`,
@@ -53,25 +54,23 @@ let socket = new Socket("/socket", {params: {token: window.userToken}})
 
 socket.connect()
 
-let channel           = socket.channel("room:lobby", {})
+let gameId = $("#gameId").html()
+let channel = socket.channel("game:" + (gameId || "lobby") , {})
 let chatInput         = $("#chat-input")
 let messagesContainer = $("#messages")
 
-chatInput.on("keypress", event => {
-  if(event.keyCode === 13){
-    channel.push("new_msg", {body: chatInput.val()})
-    chatInput.val("")
-  }
-})
-
 channel.on("new_msg", payload => {
-  messagesContainer.append(`<br/>[${Date()}] ${payload.body}`)
+  messagesContainer.prepend(`${payload.body}<br>`)
 })
 
 // Now that you are connected, you can join channels with a topic:
-let channel = socket.channel("game:lobby", {})
 channel.join()
-  .receive("ok", resp => { console.log("Joined successfully", resp) })
+  .receive("ok", resp => {
+    console.log("Joined successfully", resp);
+    if(gameId) {
+      channel.push("start")
+    }
+  })
   .receive("error", resp => { console.log("Unable to join", resp) })
 
 export default socket

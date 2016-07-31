@@ -1,4 +1,9 @@
-<h2>Game: <%= @game.id %></h2>
+<span id="gameId" style="display:none"><%= @game.id %></span>
+<h2>Game: <%= short_cid(@game.container_id) %></h2>
+<h4 style="display:inline">Status: <%= docker_status(@game.container_id) %></h4>
+&nbsp;
+<%= link "Stop", to: game_path(@conn, :stop, @game.id), class: "btn btn-raised btn-sm btn-danger"%>
+&nbsp;
+<%= link "Back to My Games", to: game_path(@conn, :index), class: "btn btn-raised btn-sm btn-primary" %>
 
 <div id="messages"></div>
-<input id="chat-input" type="text"></input>

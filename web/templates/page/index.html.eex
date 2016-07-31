@@ -1,5 +1,6 @@
 <div class="jumbotron">
   <h2><%= gettext "Welcome to Poketron" %></h2>
-  <p class="lead">A grey area on the line where the bots runs the world.</p>
+  <p class="lead">A farm of bots running around in the world.</p>
+  <a href="/games" class="btn btn-raised btn-primary">My Games</a>
 </div>
 

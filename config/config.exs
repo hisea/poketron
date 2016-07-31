@@ -11,8 +11,7 @@ config :poketron,
 
 # Configures the endpoint
 config :poketron, Poketron.Endpoint,
-  url: [host: "localhost"],
-  secret_key_base: "LfoeoRWDEPB9ht0/HEDujxv/SuhtcvqcnoyTh9IqDshGZyZFaa8UAZCAfoIPjZkP",
+  secret_key_base: "***",
   render_errors: [view: Poketron.ErrorView, accepts: ~w(html json)],
   pubsub: [name: Poketron.PubSub,
            adapter: Phoenix.PubSub.PG2]
@@ -31,8 +30,8 @@ config :ueberauth, Ueberauth,
   ]
 
 config :ueberauth, Ueberauth.Strategy.Google.OAuth,
-  client_id: "71017855936-80ktqai0siimpeved9rrcucrhf1ottt5.apps.googleusercontent.com",
-  client_secret: "4DM4CkSkfIgieBcn87jMZea5",
+  client_id: "***",
+  client_secret: "***",
   redirect_uri: "http://localhost:4000"
 
 config :guardian, Guardian,
@@ -44,4 +43,12 @@ issuer: "Poketron",
 secret_key: "Test_Key",
   serializer:  Poketron.GuardianSerializer
 
+config :dockerex,
+  host: "https://swarm-manager/",
+  options: [
+    ssl:  [
+      {:certfile, "swarm-manager/cert.pem"},
+      {:keyfile, "swarm-manager/key.pem"}
+    ]
+  ]
 import_config "#{Mix.env}.exs"

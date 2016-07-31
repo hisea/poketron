@@ -1,6 +1,7 @@
 defmodule Poketron.GameController do
   use Poketron.Web, :controller
   import Ecto.Changeset, only: [put_change: 3]
+ 
   plug Guardian.Plug.EnsureAuthenticated, handler: Poketron.AuthHandler
   plug Poketron.Plug.AssignUser
 
@@ -12,6 +13,7 @@ defmodule Poketron.GameController do
     user = conn.assigns.user
     games = Game
     |> Game.for_user(user)
+    |> Game.running
     |> Repo.all
 
     render conn, "index.html", games: games
@@ -30,8 +32,7 @@ defmodule Poketron.GameController do
       params["game"]["location"])
 
     case result do
-      %{err: nil, out: out, status: 0} ->
-        cid = String.strip(out)
+      %{"Id" => cid} ->
         changeset = Game.changeset(%Game{user_id: user.id, container_id: cid}, %{})
         changeset
         |> put_change(:container_id, cid)
@@ -52,16 +53,42 @@ defmodule Poketron.GameController do
   end
 
   def show(conn, params) do
-    game = Repo.get(Game, params["id"])
+    game = Game
+    |> Game.by_cid(params["id"])
+    |> Repo.one
 
     render conn, "show.html", game: game
+  end
+
+  def stop(conn, params) do
+    game = Repo.get(Game, params["id"])
+
+    stop_docker(game.container_id)
+
+    c = Game.changeset(game, %{status: "Deleted", deleted_at: Ecto.DateTime.utc})
+    Repo.update(c)
+
+    conn
+    |> put_flash(:info, "Stopped Game")
+    |> redirect(to: game_path(conn, :index))
   end
 
   def destroy(conn, params) do
     
   end
 
+  defp stop_docker(cid) do
+    Dockerex.Client.post("containers/#{cid}/stop")
+    Dockerex.Client.delete("containers/#{cid}")
+  end
+
   defp run_docker(account, username, password, location) do
-    Porcelain.exec("docker", ["run","-d", "--restart=always","hisea/pbot", "-a", account, "-u", username, "-p", password, "-l", location])
+    result = Dockerex.Client.post("containers/create", %{"Image": "hisea/pbot",
+                                                         "Tty": true,
+                                                         "HostConfig": %{"RestartPolicy": %{ "Name": "always"}},
+                                                         "Cmd": ["-a", account, "-u", username, "-p", password, "-l", location]})
+
+    Dockerex.Client.post("containers/#{result["Id"]}/start")
+    result
   end
 end
